@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: supermercado-app
+  labels:
+    app: supermercado-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: supermercado-app
+  template:
+    metadata:
+      labels:
+        app: supermercado-app
+    spec:
+      containers:
+        - name: supermercado-app
+          image: supermercado-nestjs:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: database-url
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: jwt-secret
